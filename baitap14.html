@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Ghép Đôi Thẻ - Nguyễn Anh</title>
+  <style>
+    /* CSS cơ bản */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #333;
+    }
+    main {
+      text-align: center;
+      padding: 2rem;
+      max-width: 800px;
+      width: 100%;
+    }
+    h1 { font-size: 2.5rem; margin-bottom: 1rem; color: #1a73e8; }
+    #moves { font-size: 1.2rem; margin-bottom: 1.5rem; }
+    #game-board {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr); /* Mobile: 2 cột */
+      gap: 1rem;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+    @media (min-width: 768px) {
+      #game-board { 
+        grid-template-columns: repeat(4, 1fr); /* Desktop: 4 cột */
+        max-width: 600px;
+      }
+    }
+    .card {
+      position: relative;
+      width: 100%;
+      height: 150px;
+      perspective: 1000px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .card:hover { transform: scale(1.05); } /* Hover effect */
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+    .card.flipped .card-inner { transform: rotateY(180deg); }
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .card-front { background: #fff; color: #888; } /* Mặt trước (ẩn) */
+    .card-back { 
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      transform: rotateY(180deg);
+      color: white;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    .matched .card-back { background: #28a745; } /* Khớp: xanh lá */
+    #reset { 
+      margin-top: 2rem; 
+      padding: 0.8rem 1.6rem; 
+      font-size: 1.1rem; 
+      background: #1a73e8; 
+      color: white; 
+      border: none; 
+      border-radius: 8px; 
+      cursor: pointer; 
+      transition: background 0.3s;
+    }
+    #reset:hover { background: #0d65d6; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Game Ghép Đôi Thẻ</h1>
+    <p id="moves">Số lượt: 0</p>
+    <section id="game-board"></section>
+    <button id="reset">Chơi lại</button>
+  </main>
+
+  <script>
+    const symbols = ['🍎', '🍎', '🍌', '🍌', '🍒', '🍒', '🍇', '🍇']; // 4 cặp
+    let flippedCards = [];
+    let moves = 0;
+    let matchedPairs = 0;
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function createBoard() {
+      const board = document.getElementById('game-board');
+      board.innerHTML = '';
+      const shuffledSymbols = shuffle([...symbols]);
+      shuffledSymbols.forEach((symbol, index) => {
+        const card = document.createElement('div');
+        card.classList.add('card');
+        card.dataset.symbol = symbol;
+        card.innerHTML = `
+          <div class="card-inner">
+            <div class="card-front">?</div>
+            <div class="card-back">${symbol}</div>
+          </div>
+        `;
+        card.addEventListener('click', flipCard);
+        board.appendChild(card);
+      });
+      moves = 0;
+      matchedPairs = 0;
+      updateMoves();
+    }
+
+    function flipCard() {
+      if (flippedCards.length === 2 || this.classList.contains('flipped') || this.classList.contains('matched')) return;
+      
+      this.classList.add('flipped');
+      flippedCards.push(this);
+      
+      if (flippedCards.length === 2) {
+        moves++;
+        updateMoves();
+        checkMatch();
+      }
+    }
+
+    function checkMatch() {
+      const [card1, card2] = flippedCards;
+      if (card1.dataset.symbol === card2.dataset.symbol) {
+        card1.classList.add('matched');
+        card2.classList.add('matched');
+        matchedPairs++;
+        if (matchedPairs === symbols.length / 2) {
+          setTimeout(() => alert('Chúc mừng! Bạn thắng sau ' + moves + ' lượt.'), 500);
+        }
+      } else {
+        setTimeout(() => {
+          card1.classList.remove('flipped');
+          card2.classList.remove('flipped');
+        }, 1000);
+      }
+      flippedCards = [];
+    }
+
+    function updateMoves() {
+      document.getElementById('moves').textContent = 'Số lượt: ' + moves;
+    }
+
+    document.getElementById('reset').addEventListener('click', createBoard);
+    createBoard(); // Khởi tạo game
+  </script>
+</body>
+</html>

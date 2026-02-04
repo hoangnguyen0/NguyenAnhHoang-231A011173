@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bài 1: Danh sách sản phẩm</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Bài 1: Danh sách sản phẩm</h1>
+  </header>
+  <nav><!-- Menu tương tự index.html --></nav>
+  <main>
+    <section>
+      <input type="text" id="search" placeholder="Tìm theo tên sản phẩm">
+      <div id="product-list" class="product-grid"></div>
+      <p id="error" style="color: red; display: none;">Không tìm thấy sản phẩm!</p>
+    </section>
+  </main>
+  <script>
+    const products = [
+      { name: "Laptop Dell", price: 15000000 },
+      { name: "iPhone 14", price: 25000000 },
+      { name: "Tai nghe Sony", price: 2000000 },
+      { name: "Chuột Logitech", price: 500000 },
+      { name: "Bàn phím Keychron", price: 3000000 },
+      { name: "Màn hình Samsung", price: 8000000 }
+    ];
+
+    function renderProducts(filtered) {
+      const list = document.getElementById('product-list');
+      list.innerHTML = '';
+      filtered.forEach(p => {
+        const div = document.createElement('div');
+        div.classList.add('product');
+        div.innerHTML = `<h3>${p.name}</h3><p>Giá: ${p.price.toLocaleString('vi')} VNĐ</p>`;
+        list.appendChild(div);
+      });
+    }
+
+    document.getElementById('search').addEventListener('input', e => {
+      const query = e.target.value.toLowerCase().trim(); // Lowercase + trim để an toàn, tránh injection (không dùng eval)
+      const filtered = products.filter(p => p.name.toLowerCase().includes(query));
+      renderProducts(filtered);
+      document.getElementById('error').style.display = filtered.length ? 'none' : 'block';
+    });
+
+    renderProducts(products); // Khởi tạo
+  </script>
+</body>
+</html>

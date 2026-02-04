@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bài 2: Form đăng ký</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Bài 2: Form đăng ký</h1>
+  </header>
+  <nav><!-- Menu tương tự --></nav>
+  <main>
+    <section class="form-section">
+      <form id="register-form">
+        <label for="name">Tên:</label>
+        <input type="text" id="name" required>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" required>
+        
+        <label for="password">Mật khẩu:</label>
+        <input type="password" id="password" required>
+        
+        <label>
+          <input type="checkbox" id="terms" required> Đồng ý điều khoản
+        </label>
+        
+        <button type="submit">Đăng ký</button>
+      </form>
+    </section>
+  </main>
+  <script>
+    document.getElementById('register-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const terms = document.getElementById('terms').checked;
+
+      if (!name || !email.match(/^\S+@\S+\.\S+$/) || password.length < 8 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/\d/.test(password) || !terms) {
+        alert('Form không hợp lệ! Kiểm tra email, mật khẩu (8 ký tự, có hoa/thường/số), và checkbox.');
+        return;
+      }
+
+      localStorage.setItem('user', JSON.stringify({ name, email })); // Lưu cục bộ (không lưu password thật cho bảo mật)
+      alert('Đăng ký thành công!');
+    });
+  </script>
+</body>
+</html>
