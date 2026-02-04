@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liên hệ - Nguyễn Anh (710-MSSV)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <img src="images/avatar.jpg" alt="Avatar Nguyễn Anh" class="avatar">
+    <h1>Liên hệ với mình</h1>
+  </header>
+  <nav>
+    <a href="index.html">Trang chủ</a>
+    <a href="baitap01.html">Bài 1</a>
+    <a href="baitap02.html">Bài 2</a>
+    <a href="baitap03.html">Bài 3</a>
+    <a href="baitap14.html">Bài 14</a>
+    <a href="about.html">Giới thiệu</a>
+    <a href="contact.html">Liên hệ</a>
+  </nav>
+  <main class="contact-main">
+    <section class="contact-container">
+      <!-- Thông tin liên hệ bên trái -->
+      <div class="contact-info">
+        <h2>Thông tin liên hệ</h2>
+        <p><strong>Email:</strong> hoangnguyenfgh2@gmail.com</p> <!-- Thay bằng email thật -->
+        <p><strong>SĐT:</strong> 0915272914</p>
+        <p><strong>Địa chỉ:</strong> Quảng Trị, Việt Nam</p>
+        <div class="social-links">
+          <a href="https://www.facebook.com/share/1DSZFdpsYv/?mibextid=wwXIfr" target="_blank">Facebook</a>
+          <a href="https://github.com/hoangnguyen0/" target="_blank">GitHub</a>
+        </div>
+      </div>
+
+      <!-- Form liên hệ bên phải -->
+      <form id="contact-form" class="contact-form">
+        <label for="name">Họ tên:</label>
+        <input type="text" id="name" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" required>
+
+        <label for="message">Tin nhắn:</label>
+        <textarea id="message" rows="5" required></textarea>
+
+        <button type="submit">Gửi tin nhắn</button>
+      </form>
+    </section>
+  </main>
+  <script src="script.js"></script>
+  <script>
+    document.getElementById('contact-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const message = document.getElementById('message').value.trim();
+
+      if (!name || !email || !message) {
+        alert('Vui lòng điền đầy đủ thông tin!');
+        return;
+      }
+      if (!email.match(/^\S+@\S+\.\S+$/)) {
+        alert('Email không hợp lệ!');
+        return;
+      }
+
+      // Demo: Lưu vào localStorage (thật: gửi AJAX đến backend)
+      localStorage.setItem('contact-' + Date.now(), JSON.stringify({ name, email, message }));
+      alert('Tin nhắn đã gửi thành công! Cảm ơn bạn.');
+      e.target.reset(); // Reset form
+    });
+  </script>
+</body>
+</html>
